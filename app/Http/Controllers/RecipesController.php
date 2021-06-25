@@ -14,7 +14,7 @@ class RecipesController extends Controller
      */
     public function index()
     {
-        return response()->json(Recipe::all(), 200);
+        return response()->json(Recipe::with('tags')->get(), 200);
     }
 
     /**

@@ -38,7 +38,6 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
         Ingredient::factory(10)->create();
         Tag::factory(10)->create();
-        Tag::factory(10)->create();
         Recipe::factory(10)->create();
         Comment::factory(10)->create();
         Category::factory(10)->create();

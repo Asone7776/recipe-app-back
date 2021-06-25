@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ApiAuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RecipesController;
+use App\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 });
 Route::resource('recipes', RecipesController::class);
+Route::get('/role/{id}', function ($id) {
+    return response()->json(Role::findOrFail($id)->users, 200);
+});
 
 

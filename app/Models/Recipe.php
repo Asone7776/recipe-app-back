@@ -23,16 +23,16 @@ class Recipe extends Model
 
     public function tags()
     {
-        $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class);
     }
 
     public function ingredients()
     {
-        $this->belongsToMany(Ingredient::class);
+        return $this->belongsToMany(Ingredient::class);
     }
 
     public function categories()
     {
-        $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 }
