@@ -13,7 +13,8 @@ class Recipe extends Model
         'name',
         'description',
         'time_to_complete',
-        'likes'
+        'likes',
+        'level_id'
     ];
 
     public function comments()
@@ -28,11 +29,16 @@ class Recipe extends Model
 
     public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class);
+        return $this->belongsToMany(Ingredient::class, 'recipe_ingredient');
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class,'recipe_category');
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
     }
 }

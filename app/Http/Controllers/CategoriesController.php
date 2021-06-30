@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IngredientRequest;
-use App\Models\Ingredient;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class IngredientsController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return response()->json(Ingredient::paginate(15), 200);
+        return response()->json(Category::paginate(15), 200);
     }
 
     /**
@@ -34,10 +33,9 @@ class IngredientsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(IngredientRequest $request)
+    public function store(Request $request)
     {
-        $new_ingredient = Ingredient::create($request->all());
-        return response()->json($new_ingredient, 201);
+        //
     }
 
     /**
@@ -48,7 +46,7 @@ class IngredientsController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Ingredient::findOrFail($id), 200);
+        //
     }
 
     /**
@@ -59,7 +57,7 @@ class IngredientsController extends Controller
      */
     public function edit($id)
     {
-        return response()->json(Ingredient::findOrFail($id), 200);
+        //
     }
 
     /**
@@ -69,11 +67,9 @@ class IngredientsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(IngredientRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $ingredient_to_update = Ingredient::findOrFail($id);
-        $ingredient_to_update->update($request->all());
-        return response()->json($ingredient_to_update, 200);
+        //
     }
 
     /**
@@ -84,8 +80,6 @@ class IngredientsController extends Controller
      */
     public function destroy($id)
     {
-        $item_to_delete = Ingredient::findOrFail($id);
-        $item_to_delete->delete();
-        return response()->json(['id' => $item_to_delete['id']], 200);
+        //
     }
 }

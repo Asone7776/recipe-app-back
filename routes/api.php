@@ -6,6 +6,10 @@ use App\Http\Controllers\Auth\ApiAuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RecipesController;
 use App\Models\Role;
+use App\Http\Controllers\IngredientsController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\CategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +31,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/current-user', function () {
         return Auth::user();
     });
+    Route::resource('comments', CommentsController::class);
+    Route::post('/comments/add-to-recipe/{id}', [CommentsController::class, 'addCommentForRecipe']);
 });
 Route::resource('recipes', RecipesController::class);
+Route::resource('ingredients', IngredientsController::class);
+Route::resource('roles', RolesController::class);
+Route::resource('categories', CategoriesController::class);
+
 Route::get('/role/{id}', function ($id) {
     return response()->json(Role::findOrFail($id)->users, 200);
 });

@@ -19,6 +19,7 @@ class CreateRecipesTable extends Migration
             $table->text('description')->nullable();
             $table->date('time_to_complete')->nullable();
             $table->integer('likes')->default(0);
+            $table->integer('level_id')->nullable();
             $table->timestamps();
         });
     }
