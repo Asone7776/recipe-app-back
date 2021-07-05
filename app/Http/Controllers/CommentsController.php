@@ -15,7 +15,7 @@ class CommentsController extends Controller
      */
     public function index()
     {
-        return response()->json(Comment::paginate(15), 200);
+        return response()->json(Comment::with('user')->with('recipe')->paginate(15), 200);
     }
 
     /**

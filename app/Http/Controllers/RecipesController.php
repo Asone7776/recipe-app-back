@@ -82,4 +82,11 @@ class RecipesController extends Controller
     {
         //
     }
+
+    public function lookup(Request $request)
+    {
+        $s = $request->get('search');
+        $response = Recipe::select('id', 'name')->where('name', 'like', '%' . $s . '%')->get();
+        return response()->json($response, 200);
+    }
 }

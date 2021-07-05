@@ -9,6 +9,16 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['message', 'recipe_id','user_id'];
+    protected $fillable = ['message', 'recipe_id', 'user_id'];
+//    protected $hidden = ['user_id','recipe_id'];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function recipe()
+    {
+        return $this->belongsTo(Recipe::class);
+    }
 }

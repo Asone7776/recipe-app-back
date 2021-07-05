@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,17 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Category::paginate(15), 200);
+        $s = $request->get('search');
+
+        if ($s != '') {
+            $response = Category::where('name', 'like', '%' . $s . '%')->paginate(15);
+//            $response->appends(array('search'=>$s));
+        } else {
+            $response = Category::paginate(15);
+        }
+        return response()->json($response, 200);
     }
 
     /**
@@ -33,9 +42,10 @@ class CategoriesController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $new_item = Category::create($request->all());
+        return response()->json($new_item, 201);
     }
 
     /**
@@ -46,7 +56,7 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Category::findOrFail($id), 200);
     }
 
     /**
@@ -57,7 +67,7 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response()->json(Category::findOrFail($id), 200);
     }
 
     /**
@@ -69,7 +79,9 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $item_to_update = Category::findOrFail($id);
+        $item_to_update->update($request->all());
+        return response()->json($item_to_update, 200);
     }
 
     /**
@@ -80,6 +92,8 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item_to_delete = Category::findOrFail($id);
+        $item_to_delete->delete();
+        return response()->json(['id' => $item_to_delete['id']], 200);
     }
 }
