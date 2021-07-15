@@ -13,9 +13,10 @@ class IngredientsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Ingredient::paginate(15), 200);
+        $s = $request->get('search');
+        return response()->json(Ingredient::where('name', 'like', '%%' . $s . "%%")->with('recipes')->paginate(15), 200);
     }
 
     /**

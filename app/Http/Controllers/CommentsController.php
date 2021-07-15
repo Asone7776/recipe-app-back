@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use App\Models\Comment;
@@ -34,7 +35,7 @@ class CommentsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
         $new_item = Comment::create($request->all());
         return response()->json($new_item, 201);
@@ -48,7 +49,7 @@ class CommentsController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Comment::findOrFail($id), 200);
+        return response()->json(Comment::with('user')->with('recipe')->findOrFail($id), 200);
     }
 
     /**
@@ -59,7 +60,7 @@ class CommentsController extends Controller
      */
     public function edit($id)
     {
-        return response()->json(Comment::findOrFail($id), 200);
+        return response()->json(Comment::findOrFail($id)->with('user')->with('recipe')->get(), 200);
     }
 
     /**
@@ -69,7 +70,7 @@ class CommentsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CommentRequest $request, $id)
     {
         $item_to_update = Comment::findOrFail($id);
         $item_to_update->update($request->all());

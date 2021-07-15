@@ -11,6 +11,7 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\UsersController;
+use App\Models\Level;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
     Route::post('/comments/add-to-recipe/{id}', [CommentsController::class, 'addCommentForRecipe']);
     Route::resource('comments', CommentsController::class);
+    Route::get('levels', function () {
+        return Level::all();
+    });
 });
 Route::get('/users/lookup', [UsersController::class, 'lookup'])->name('users.lookup');
 Route::get('/recipes/lookup', [RecipesController::class, 'lookup'])->name('recipes.lookup');
