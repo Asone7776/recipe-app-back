@@ -26,7 +26,7 @@ class RecipeFactory extends Factory
         return [
             'name' => $this->faker->realText('20'),
             'description' => $this->faker->text,
-            'time_to_complete' => $this->faker->date(),
+            'time_to_complete' => $this->faker->time(),
             'likes' => $this->faker->randomDigit,
             'level_id' => $this->faker->randomElement($levels)
         ];

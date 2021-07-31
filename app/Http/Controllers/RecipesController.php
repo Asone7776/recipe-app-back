@@ -16,7 +16,7 @@ class RecipesController extends Controller
     public function index(Request $request)
     {
         $s = $request->get('search');
-        return response()->json(Recipe::where('name', 'like', '%%' . $s . "%%")->with('level')->with('tags')->paginate(15), 200);
+        return response()->json(Recipe::where('name', 'like', '%%' . $s . "%%")->with('level')->with('tags')->with('details')->paginate(15), 200);
     }
 
     /**
@@ -37,22 +37,27 @@ class RecipesController extends Controller
      */
     public function store(RecipeRequest $request)
     {
-        $data = $request->all();
-        $new_recipe = Recipe::create([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'level_id' => $data['level_id'],
-            'time_to_complete' => $data['time_to_complete']
-        ]);
+        $data = $request->only('tags', 'categories', 'details');
+        $new_recipe = Recipe::create($request->only('name', 'description', 'level_id', 'time_to_complete'));
         if ($request->has('tags') && count($data['tags']) > 0) {
             $new_recipe->tags()->attach($data['tags']);
         }
         if ($request->has('categories') && count($data['categories']) > 0) {
             $new_recipe->categories()->attach($data['categories']);
         }
-        if ($request->has('ingredients') && count($data['ingredients']) > 0) {
-            $new_recipe->ingredients()->attach($data['ingredients']);
+        if ($request->has('details') && count($data['details']) > 0) {
+            $details = [];
+            foreach ($request->get('details') as $detail) {
+                array_push($details, [
+                    'name' => $detail['name'],
+                    'description' => $detail['description'],
+                ]);
+            }
+            $new_recipe->details()->createMany($details);
         }
+//        if ($request->has('ingredients') && count($data['ingredients']) > 0) {
+//            $new_recipe->ingredients()->attach($data['ingredients']);
+//        }
         return response()->json($new_recipe, 201);
     }
 
@@ -64,7 +69,7 @@ class RecipesController extends Controller
      */
     public function show($id)
     {
-
+        return response()->json(Recipe::with('tags')->with('categories')->with('ingredients')->findOrFail($id), 200);
     }
 
     /**
@@ -98,7 +103,9 @@ class RecipesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $recipe_to_delete = Recipe::findOrFail($id);
+        $recipe_to_delete->delete();
+        return response()->json(['id' => $id], 200);
     }
 
     public function lookup(Request $request)

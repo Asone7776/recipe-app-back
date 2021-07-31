@@ -89,4 +89,9 @@ class IngredientsController extends Controller
         $item_to_delete->delete();
         return response()->json(['id' => $item_to_delete['id']], 200);
     }
+    public function lookup(Request $request)
+    {
+        $s = $request->get('search');
+        return response()->json(Ingredient::where('name', 'like', '%%' . $s . "%%")->get(), 200);
+    }
 }

@@ -41,6 +41,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 Route::get('/users/lookup', [UsersController::class, 'lookup'])->name('users.lookup');
 Route::get('/recipes/lookup', [RecipesController::class, 'lookup'])->name('recipes.lookup');
+Route::get('/categories/lookup', [CategoriesController::class, 'lookup'])->name('categories.lookup');
+Route::get('/tags/lookup', [TagsController::class, 'lookup'])->name('tags.lookup');
+Route::get('/ingredients/lookup', [IngredientsController::class, 'lookup'])->name('ingredients.lookup');
 
 Route::resource('users', UsersController::class);
 Route::resource('recipes', RecipesController::class);

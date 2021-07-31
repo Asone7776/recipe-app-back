@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TagRequest;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class TagsController extends Controller
 {
@@ -86,5 +87,11 @@ class TagsController extends Controller
         $item_to_delete = Tag::findOrFail($id);
         $item_to_delete->delete();
         return response()->json(['id' => $id], 200);
+    }
+
+    public function lookup(Request $request)
+    {
+        $s = $request->get('search');
+        return response()->json(Tag::where('name', 'like', '%%' . $s . "%%")->get(), 200);
     }
 }

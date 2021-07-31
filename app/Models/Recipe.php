@@ -29,16 +29,21 @@ class Recipe extends Model
 
     public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class, 'recipe_ingredient');
+        return $this->belongsToMany(Ingredient::class);
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class,'recipe_category');
+        return $this->belongsToMany(Category::class, 'recipe_category');
     }
 
     public function level()
     {
         return $this->belongsTo(Level::class);
+    }
+
+    public function details()
+    {
+        return $this->hasMany(RecipeDetail::class);
     }
 }
