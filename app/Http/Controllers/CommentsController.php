@@ -14,9 +14,10 @@ class CommentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Comment::with('user')->with('recipe')->paginate(15), 200);
+        $s = $request->get('search');
+        return response()->json(Comment::where('message', 'like', '%%' . $s . '%%')->with('user')->with('recipe')->paginate(15), 200);
     }
 
     /**

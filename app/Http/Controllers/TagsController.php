@@ -13,9 +13,10 @@ class TagsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Tag::paginate(15), 200);
+        $s = $request->get('search');
+        return response()->json(Tag::where('name', 'like', '%%' . $s . '%%')->paginate(15), 200);
     }
 
     /**

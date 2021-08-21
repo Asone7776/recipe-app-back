@@ -10,6 +10,7 @@ class RecipeDetail extends Model
     use HasFactory;
 
     protected $fillable = ['position', 'name', 'description'];
+    protected $hidden = ['created_at','updated_at'];
 
     public function recipe()
     {

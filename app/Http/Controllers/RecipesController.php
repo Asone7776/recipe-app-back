@@ -37,7 +37,7 @@ class RecipesController extends Controller
      */
     public function store(RecipeRequest $request)
     {
-        $data = $request->only('tags', 'categories', 'details');
+        $data = $request->only('tags', 'categories', 'details', 'ingredients');
         $new_recipe = Recipe::create($request->only('name', 'description', 'level_id', 'time_to_complete'));
         if ($request->has('tags') && count($data['tags']) > 0) {
             $new_recipe->tags()->attach($data['tags']);
@@ -46,18 +46,11 @@ class RecipesController extends Controller
             $new_recipe->categories()->attach($data['categories']);
         }
         if ($request->has('details') && count($data['details']) > 0) {
-            $details = [];
-            foreach ($request->get('details') as $detail) {
-                array_push($details, [
-                    'name' => $detail['name'],
-                    'description' => $detail['description'],
-                ]);
-            }
-            $new_recipe->details()->createMany($details);
+            $new_recipe->details()->createMany($data['details']);
         }
-//        if ($request->has('ingredients') && count($data['ingredients']) > 0) {
-//            $new_recipe->ingredients()->attach($data['ingredients']);
-//        }
+        if ($request->has('ingredients') && count($data['ingredients']) > 0) {
+            $new_recipe->ingredients()->attach($data['ingredients']);
+        }
         return response()->json($new_recipe, 201);
     }
 
@@ -69,7 +62,7 @@ class RecipesController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Recipe::with('tags')->with('categories')->with('ingredients')->findOrFail($id), 200);
+        return response()->json(Recipe::with('tags')->with('categories')->with('ingredients')->with('details')->findOrFail($id), 200);
     }
 
     /**
@@ -90,9 +83,40 @@ class RecipesController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RecipeRequest $request, $id)
     {
-        //
+        $data = $request->only('tags', 'categories', 'details', 'ingredients');
+        $recipe_to_update = Recipe::findOrFail($id);
+        $recipe_to_update->update($request->only('name', 'description', 'level_id', 'time_to_complete'));
+        if ($data && $data['tags']) {
+            $recipe_to_update->tags()->sync($data['tags']);
+        }
+        if ($data && $data['categories']) {
+            $recipe_to_update->categories()->sync($data['categories']);
+        }
+
+        if ($data && $data['ingredients']) {
+            $recipe_to_update->ingredients()->sync($data['ingredients']);
+        }
+
+        if (isset($data['details'])) {
+            if (empty($data['details'])) {
+                $recipe_to_update->details()->delete();
+            } else {
+                //Delete existing details
+                $recipe_to_update->details()->whereNotIn('id', $data['details'])->delete();
+
+                foreach ($data['details'] as $detail) {
+                    $recipe_to_update->details()->updateOrCreate([
+                        'id' => isset($detail['id']) ? $detail['id'] : null,
+                    ], [
+                        'name' => $detail['name'],
+                        'description' => $detail['description']
+                    ]);
+                }
+            }
+        }
+        return response()->json($recipe_to_update, 200);
     }
 
     /**
